@@ -14,3 +14,18 @@ padding:  8px;
 text-align:left;}
 
 th{background-color:#eee;}
+
+
+/*
+
+Testing for team colors
+
+*/
+
+
+.teamCell
+{
+    
+font-weight: bold;
+padding:6px
+}

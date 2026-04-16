@@ -1,41 +1,48 @@
-const tbody = document.querySelector("#driversTable tbody");
-
-// Step 1: get a real session
-fetch("https://api.openf1.org/v1/sessions?limit=1")
+const searchBox=document.querySelector("#searchBox");
+const tbody=document.querySelector("#driversTable tbody");
+fetch("https://api.openf1.org/v1/drivers?session_key=latest")
 .then(res => res.json())
-.then(session => {
+.then(drivers=> {
+console.log(drivers);
+drivers.forEach((driver, index) => {
+const row =document.createElement("tr");
+row.classList.add("driverRow");
+row.innerHTML =`
+<td>${index +1}</rd>
+<td>${driver.full_name}</td>
 
-    const sessionKey = session[0].session_key;
+<td><img src="${driver.headshot_url}" width="65"></td>
 
-    // known driver numbers (you already used these)
-    const drivers = [1, 4, 16, 44, 55, 63, 10, 14, 11, 18, 23, 31, 81];
 
-    // Step 2: fetch each driver individually (THIS IS REQUIRED)
-    const requests = drivers.map(num =>
-        fetch(`https://api.openf1.org/v1/drivers?driver_number=${num}&session_key=${sessionKey}`)
-            .then(res => res.json())
-            .then(data => data[0])
-    );
+<td class="teamCell" style="background:#${driver.team_colour}; color:white;">
+${driver.team_name}
+</td>
 
-    return Promise.all(requests);
-})
-.then(drivers => {
 
-    drivers.forEach((driver, index) => {
+<td>${driver.name_acronym}</td>
+`;
 
-        if (!driver) return;
 
-        const row = document.createElement("tr");
-
-        row.innerHTML = `
-            <td>${index + 1}</td>
-            <td>${driver.full_name}</td>
-            <td>${driver.team_name}</td>
-            <td>${driver.name_acronym}</td>
-        `;
-
-        tbody.appendChild(row);
+row.addEventListener("click", ()=>{
+  alert(`${driver.full_name}\nTeam: ${driver.team_name}\nNumber: ${driver.driver_number}`);  
+    
+    
     });
 
+tbody.appendChild(row);
+});
+
 })
-.catch(err => console.log("ERROR:", err));
+.catch(err => console.log(err));
+
+searchBox.addEventListener("input", () => {
+const value=searchBox.value.toLowerCase();
+const rows =document.querySelectorAll(".driverRow");
+rows. forEach(row=>{
+if(row.innerText.toLowerCase().includes(value))
+{row.style.display="";}
+else {row.style.display="none";}
+
+});
+
+});

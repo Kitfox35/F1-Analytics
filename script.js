@@ -13,7 +13,8 @@ const randomTrackBtn= document.querySelector("#randomTrackBtn");
 const img=document.querySelector("#trackImage");
 img.src=data.circuit_image;
 document.querySelector("#raceName").innerText = data.meeting_name + " - " + data.location;
-  
+  document.querySelector("#nextRaceName").innerText = data.meeting_name;
+startCountdown(data.date_start);
 if (data.circuit_image)
 {
 applyThemeColor(data.circuit_image);
@@ -21,6 +22,10 @@ applyThemeColor(data.circuit_image);
 })
 .catch(err =>console.log("There is a track error!:", err));
   
+
+
+
+
   }
 
 
@@ -166,4 +171,29 @@ document.documentElement.style.setProperty("--theme", color);
 };
 
 
+}
+
+let countdownInterval;
+
+function startCountdown(dateString){
+clearInterval(countdownInterval);
+function update(){
+
+if (!dateString) return;
+const now= new Date();
+const raceDate=new Date(dateString);
+const diff=raceDate- now;
+if(diff<=0)
+{
+document.querySelector("#countdown").innerText ="LIVE NOW!!";
+return;}
+
+const days = Math.floor((diff/ (1000*60*60)) % 24);
+const hours =Math.floor((diff / (100*60*60)) %60);
+const mins = Math.floor((diff/(1000*60))%60);
+const secs= Math.floor((diff / 1000)% 60);
+document.querySelector("#countdown").innerText = `${days}d ${hours}h ${mins}m ${secs}s`;
+}
+update();
+countdownInterval = setInterval(update, 1000);
 }

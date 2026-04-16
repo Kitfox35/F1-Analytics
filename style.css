@@ -184,3 +184,49 @@ transition:0.2s;}
 th[data-col]:hover{
     background:#ff2a2a;
 }
+
+
+#countdownBox
+{
+    margin: 10px 0 20px 0;
+padding: 10px;
+border: 1px solid #333;
+background:#111;
+width: fit-content;
+}
+
+
+#controlsBar
+{
+display: flex;
+align-items: center;
+justify-content: space-between;
+gap: 20px;
+margin-bottom: 15px;
+
+}
+
+#countdownBox
+{
+
+background: #111;
+border: 1px solid #333;
+padding: 10px 14px;
+border-radius: 10px;
+min-width : 220px;
+text-align:right;
+
+
+}
+
+#nextRaceName{
+font-size: 12px;
+opacity: 0.8;
+margin-bottom: 4px;}
+
+#countdown {
+font-size: 16px;
+font-weight: bold;
+color: var(--theme, #e10600);
+letter-spacing: 0.5px;
+}

@@ -1,28 +1,44 @@
+const randomTrackBtn= document.querySelector("#randomTrackBtn");
+  let currentMeetings=[];
+  
+  function loadRandomTrack(){
 
-window.addEventListener("DOMContentLoaded", () => {
 
-  fetch("https://api.openf1.org/v1/meetings?year=2026&country_name=Singapore")
-.then(res => res.json())
-.then(meetings => {
-if(!meetings.length) return;
-
-  const data=meetings[0];
-document.querySelector("#trackImage").src = data.circuit_image;
-document.querySelector("#raceName").innerText=
-data.meeting_name + " - " + data.location + ", " + data.country_name;
-
+  fetch("https://api.openf1.org/v1/meetings?year=2026")
+  .then(res => res.json())
+  .then(meetings => {
+  if(!meetings || !meetings.length) return;
+  const data=meetings[Math.floor(Math.random() * meetings.length)];
+  console.log("Selected track:", data);
+const img=document.querySelector("#trackImage");
+img.src=data.circuit_image;
+document.querySelector("#raceName").innerText = data.meeting_name + " - " + data.location;
+  
+if (data.circuit_image)
+{
+applyThemeColor(data.circuit_image);
+  }
 })
-.catch(err => console.log(err));
+.catch(err =>console.log("There is a track error!:", err));
+  
+  }
 
 
-})
 
+  
+randomTrackBtn.addEventListener("click", loadRandomTrack);
+  
+window.addEventListener("DOMContentLoaded", loadRandomTrack);
 
 
 const searchBox=document.querySelector("#searchBox");
 const tbody=document.querySelector("#driversTable tbody");
 fetch("https://api.openf1.org/v1/drivers?session_key=latest")
-.then(res => res.json())
+.then(res => {
+if(!res.ok) throw new Error("Driver API failed!!!!! 😱");
+return res.json();
+})
+
 .then(drivers=> {
 console.log(drivers);
 const legend= document.querySelector("#teamLegend");
@@ -116,3 +132,38 @@ rows.forEach(r=> tbody.appendChild(r));
 
 
 });
+
+
+function applyThemeColor(imageURL)
+{
+const img=new Image();
+img.crossOrigin="anonymous";
+img.src=imageURL;
+img.onload=()=>
+{
+const canvas=document.createElement("canvas");
+const ctx = canvas.getContext("2d");
+canvas.width=60;
+canvas.height=50;
+ctx.drawImage(img, 0,0,50,50);
+const data=ctx.getImageData(0,0,50,50).data;
+
+
+
+let r=0,g=0,b=0,count=0;
+
+for (let i=0; i<data.length; i+= 4){
+r+= data[i]
+g +=data[i + 1];
+b+=data[i+2];
+count++;
+}
+r =Math.floor(r/count);
+g= Math.floor(g / count);
+b = Math.floor(b/count);
+const color = `rgb(${r},${g}, ${b})`;
+document.documentElement.style.setProperty("--theme", color);
+};
+
+
+}

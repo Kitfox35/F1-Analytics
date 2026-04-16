@@ -7,22 +7,32 @@
 
 
 </head>
+
 <body>
+    <button id="darkToggle">Toggle BLACK Mode</button>
 <h1>Formula 1 Analytic Dashboard made EZ</h1>
 <h2>Driver Standings</h2>
-
+<h3>Team Colors</h3>
+<div id="teamLegend"></div>
 <input type="text" id="searchBox" placeholder="Search driver or team here">
+
+<div id="driverPanel">
+<h4>Driver Info</h4>
+<div id="driverInfo">Click a driver to see details</div>
+
+</div>
+
 <br><br>
 
 <table id ="driversTable">
 
 <thead>
 <tr>
-<th>#</th>
-<th>Driver</th>
-<th>Team</th>
-<th>Acronym</th>
+<th data-col="0">#</th>
+<th data-col="1">Driver</th>
 <th>Photo</th>
+<th data-col="3">Team</th>
+<th data-col="4">Acronym</th>
 </tr>
 
 

@@ -4,6 +4,12 @@ fetch("https://api.openf1.org/v1/drivers?session_key=latest")
 .then(res => res.json())
 .then(drivers=> {
 console.log(drivers);
+const legend= document.querySelector("#teamLegend");
+const teams= {};
+
+
+
+
 drivers.forEach((driver, index) => {
 const row =document.createElement("tr");
 row.classList.add("driverRow");
@@ -22,12 +28,15 @@ ${driver.team_name}
 <td>${driver.name_acronym}</td>
 `;
 
-
-row.addEventListener("click", ()=>{
-  alert(`${driver.full_name}\nTeam: ${driver.team_name}\nNumber: ${driver.driver_number}`);  
-    
-    
-    });
+row.addEventListener("click", () => {
+const panel =document.querySelector("#driverInfo");
+panel.innerHTML=
+`
+<img src="${driver.headshot_url}">
+<strong>${driver.full_name}</strong><br>
+Team: ${driver.team_name}<br>
+Driver Number: ${driver.driver_number}<br>
+Acronym: ${driver.name_acronym}`;});
 
 tbody.appendChild(row);
 });
@@ -44,5 +53,13 @@ if(row.innerText.toLowerCase().includes(value))
 else {row.style.display="none";}
 
 });
+
+});
+
+const toggle=document.querySelector("#darkToggle");
+
+toggle.addEventListener("click", () => {
+document.body.classList.toggle("dark");
+
 
 });

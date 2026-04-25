@@ -225,8 +225,9 @@ opacity: 0.8;
 margin-bottom: 4px;}
 
 #countdown {
-font-size: 16px;
+font-size: 18px;
 font-weight: bold;
-color: var(--theme, #e10600);
-letter-spacing: 0.5px;
+color: white;
+letter-spacing: 1px;
+text-shadow: 0 0 8px var(--theme, #e10600);
 }

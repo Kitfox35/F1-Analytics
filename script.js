@@ -1,32 +1,36 @@
 const randomTrackBtn= document.querySelector("#randomTrackBtn");
   let currentMeetings=[];
   
-  function loadRandomTrack(){
+function loadRandomTrack() {
+fetch("https://api.openf1.org/v1/meetings?year=2026")
+.then(res => res.json())
+.then(meetings => {
+  if (!meetings || !meetings.length) return;
 
+  const now = new Date();
 
-  fetch("https://api.openf1.org/v1/meetings?year=2026")
-  .then(res => res.json())
-  .then(meetings => {
-  if(!meetings || !meetings.length) return;
-  const data=meetings[Math.floor(Math.random() * meetings.length)];
-  console.log("Selected track:", data);
-const img=document.querySelector("#trackImage");
-img.src=data.circuit_image;
-document.querySelector("#raceName").innerText = data.meeting_name + " - " + data.location;
-  document.querySelector("#nextRaceName").innerText = data.meeting_name;
-startCountdown(data.date_start);
-if (data.circuit_image)
-{
-applyThemeColor(data.circuit_image);
-  }
-})
-.catch(err =>console.log("There is a track error!:", err));
+  const futureRaces = meetings.filter(m =>
+    m.meeting_name.includes("Grand Prix") &&
+    new Date(m.date_start) > now
+  );
+
+  if (!futureRaces.length) return;
   
+  const data = futureRaces[Math.floor(Math.random() * futureRaces.length)];
 
+  console.log("Selected FUTURE race:", data);
 
+  document.querySelector("#trackImage").src = data.circuit_image;
+  document.querySelector("#raceName").innerText =
+    data.meeting_name + " - " + data.location;
 
+  document.querySelector("#nextRaceName").innerText = data.meeting_name;
 
-  }
+  startCountdown(data.date_start);
+  applyThemeColor(data.circuit_image);
+})
+.catch(err => console.log("Track error:", err));
+}
 
 
 
@@ -178,22 +182,22 @@ let countdownInterval;
 function startCountdown(dateString){
 clearInterval(countdownInterval);
 function update(){
-
 if (!dateString) return;
-const now= new Date();
-const raceDate=new Date(dateString);
-const diff=raceDate- now;
-if(diff<=0)
-{
-document.querySelector("#countdown").innerText ="LIVE NOW!!";
-return;}
 
-const days = Math.floor((diff/ (1000*60*60)) % 24);
-const hours =Math.floor((diff / (100*60*60)) %60);
-const mins = Math.floor((diff/(1000*60))%60);
-const secs= Math.floor((diff / 1000)% 60);
-document.querySelector("#countdown").innerText = `${days}d ${hours}h ${mins}m ${secs}s`;
+const now = new Date();
+const raceDate = new Date(dateString);
+const diff = raceDate - now;
+
+if (diff <= 0) {  document.querySelector("#countdown").innerText = "LIVE NOW!!";
+return;
 }
-update();
-countdownInterval = setInterval(update, 1000);
+const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+const mins = Math.floor((diff / (1000 * 60)) % 60);
+const secs = Math.floor((diff / 1000) % 60);
+
+document.querySelector("#countdown").innerText =
+  `${days}d ${hours}h ${mins}m ${secs}s`;
+}update();
+  countdownInterval = setInterval(update, 1000);
 }
